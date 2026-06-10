@@ -1,0 +1,39 @@
+# Environment variables — NEVER commit credentials
+.env
+.env.*
+
+# Weights & Biases local logs
+wandb/
+
+# Hugging Face cache
+.huggingface/
+transformers_cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Model outputs (large files)
+results/
+*.bin
+*.safetensors
+*.pt
+*.pth
+checkpoint-*/
+
+# Evaluation artifacts
+eval_report.json
+
+# Docker
+*.dockerignore
