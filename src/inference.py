@@ -1,53 +1,33 @@
-"""Inference entrypoint for Docker and GitHub Actions.
+"""
+inference.py — used by Docker (Task 6) and the GitHub Actions inference workflow (Task 7).
+Reads model from HF_MODEL_NAME and text from INPUT_TEXT, prints the predicted label.
 
-Group Project — MLOps End-to-End Pipeline
+Owner: Aryaveer Rathi
 """
 import os
-import sys
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
+import torch
+from transformers import (AutoModelForSequenceClassification, AutoTokenizer)
 
-def load_model_from_hub(model_name: str, token: str = None):
-    """Load tokenizer and model from Hugging Face Hub."""
-    tokenizer = AutoTokenizer.from_pretrained(model_name, token=token)
-    model = AutoModelForSequenceClassification.from_pretrained(model_name, token=token)
-    return tokenizer, model
-
-
-def predict(text: str, tokenizer, model, id2label: dict):
-    """Run inference on a single input and return predicted label."""
-    inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True)
-    outputs = model(**inputs)
-    pred_id = outputs.logits.argmax(-1).item()
-    return id2label.get(str(pred_id), pred_id)
+MODEL_NAME = os.environ.get(
+    "HF_MODEL_NAME", "your-username/emotion-minilm")  # default for Docker ARG
+INPUT_TEXT = os.environ.get("INPUT_TEXT", "I am so happy today!")
 
 
 def main():
-    """Read INPUT_TEXT and HF_MODEL_NAME from environment and predict."""
-    input_text = os.environ.get("INPUT_TEXT", "")
-    model_name = os.environ.get("HF_MODEL_NAME", os.environ.get("HF_MODEL", "your-username/your-model"))
-    hf_token = os.environ.get("HF_TOKEN", None)
+    tok = AutoTokenizer.from_pretrained(MODEL_NAME)
+    model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME)
+    model.eval()
 
-    if not input_text:
-        print("ERROR: INPUT_TEXT environment variable not set.")
-        sys.exit(1)
+    enc = tok(INPUT_TEXT, return_tensors="pt", truncation=True, max_length=128)
+    with torch.no_grad():
+        logits = model(**enc).logits
+    pred_id = int(logits.argmax(-1))
+    label = model.config.id2label[pred_id]
+    score = torch.softmax(logits, -1).max().item()
 
-    print(f"Loading model: {model_name}")
-    tokenizer, model = load_model_from_hub(model_name, token=hf_token)
-
-    # Load label map if available
-    id2label = {}
-    try:
-        import json
-        with open("id2label.json", "r") as f:
-            mapping = json.load(f)
-            id2label = mapping.get("id2label", {})
-    except FileNotFoundError:
-        print("Warning: id2label.json not found.")
-
-    pred = predict(input_text, tokenizer, model, id2label)
-    print(f"Input: {input_text}")
-    print(f"Predicted: {pred}")
+    print(f"Input : {INPUT_TEXT}")
+    print(f"Label : {label}  (confidence {score:.3f})")
 
 
 if __name__ == "__main__":

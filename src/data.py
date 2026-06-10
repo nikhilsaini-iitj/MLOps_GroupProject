@@ -1,53 +1,70 @@
-"""Data loading, cleaning, encoding, and train/test split.
+"""
+prepare_data.py — Task 2: Data Preparation & Normalisation
+Loads dair-ai/emotion, inspects it, cleans text, builds id2label.json,
+and saves processed splits locally (NOT committed).
 
-Group Project — MLOps End-to-End Pipeline
+Run:  python src/prepare_data.py
+Owner: Y Sharathchandrika
 """
 import json
-import pandas as pd
-from sklearn.model_selection import train_test_split
+import os
+import re
+import string
+from collections import Counter
+
+from datasets import load_dataset
+
+OUT_DIR = "data"
+os.makedirs(OUT_DIR, exist_ok=True)
 
 
-def load_data(path: str) -> pd.DataFrame:
-    """Load raw dataset from CSV or other format."""
-    raise NotImplementedError("Implement based on your chosen dataset.")
+def clean_text(text: str) -> str:
+    """Lowercase, strip punctuation, collapse whitespace."""
+    text = text.lower()
+    text = text.translate(str.maketrans("", "", string.punctuation))
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
 
 
-def clean_data(df: pd.DataFrame) -> pd.DataFrame:
-    """Clean and normalize data (handle nulls, duplicates, encoding).
-    
-    Document every decision in the report.
-    """
-    raise NotImplementedError("Implement based on your chosen dataset and modality.")
+def main():
+    # 1. Load raw data
+    ds = load_dataset("dair-ai/emotion")
+    print("Splits:", {k: len(v) for k, v in ds.items()})
 
+    # 2. Inspect class distribution (report this!)
+    labels = ds["train"].features["label"].names
+    dist = Counter(ds["train"]["label"])
+    print("Classes:", labels)
+    print("Train class distribution:",
+          {labels[i]: dist[i] for i in range(len(labels))})
 
-def encode_labels(df: pd.DataFrame, label_col: str, output_path: str = "id2label.json"):
-    """Create id2label / label2id mappings and save to JSON."""
-    unique_labels = sorted(df[label_col].unique().tolist())
-    id2label = {i: label for i, label in enumerate(unique_labels)}
-    label2id = {label: i for i, label in enumerate(unique_labels)}
-    
-    mapping = {"id2label": id2label, "label2id": label2id}
-    with open(output_path, "w") as f:
-        json.dump(mapping, f, indent=2)
-    
-    return mapping
+    # 3. Build id2label / label2id and save mapping (COMMIT THIS FILE)
+    id2label = {str(i): name for i, name in enumerate(labels)}
+    label2id = {name: i for i, name in enumerate(labels)}
+    with open("id2label.json", "w") as f:
+        json.dump(id2label, f, indent=2)
+    print("Wrote id2label.json:", id2label)
 
+    # 4. Clean text + drop duplicates/empties per split
+    def process(split):
+        rows = ds[split]
+        seen, texts, ys = set(), [], []
+        for ex in rows:
+            t = clean_text(ex["text"])
+            if not t or t in seen:
+                continue          # drop empty + duplicate
+            seen.add(t)
+            texts.append(t)
+            ys.append(ex["label"])
+        return {"text": texts, "label": ys}
 
-def split_data(df: pd.DataFrame, label_col: str, test_size=0.2, random_state=42):
-    """Stratified train/test split."""
-    train_df, test_df = train_test_split(
-        df,
-        test_size=test_size,
-        stratify=df[label_col],
-        random_state=random_state,
-    )
-    return train_df, test_df
+    for split in ["train", "validation", "test"]:
+        data = process(split)
+        path = os.path.join(OUT_DIR, f"{split}.json")
+        with open(path, "w") as f:
+            json.dump(data, f)
+        print(f"{split}: {len(data['text'])} rows -> {path}")
 
 
 if __name__ == "__main__":
-    # Example workflow (replace with your dataset)
-    # df = load_data("data/raw.csv")
-    # df = clean_data(df)
-    # mapping = encode_labels(df, label_col="label")
-    # train_df, test_df = split_data(df, label_col="label")
-    pass
+    main()
