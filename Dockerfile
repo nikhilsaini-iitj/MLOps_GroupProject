@@ -2,7 +2,7 @@
 FROM python:3.11-slim
 
 # Accept HF model name as a build argument
-ARG HF_MODEL_NAME=your-username/your-model-repo
+ARG HF_MODEL_NAME=Nikhil-iitj/emotion-electra
 ENV HF_MODEL_NAME=${HF_MODEL_NAME}
 
 # Set working directory

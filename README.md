@@ -27,7 +27,7 @@ End-to-end MLOps pipeline for text emotion classification using the `dair-ai/emo
 | **Hugging Face Model v1** | https://huggingface.co/Nikhil-iitj/emotion-minilm |
 | **Hugging Face Model v2** | https://huggingface.co/Nikhil-iitj/emotion-electra |
 | **W&B Dashboard** | https://wandb.ai/g25ait2067-prom-iit-rajasthan/mlops-groupproject-v2 |
-| **Docker Image** | *(add after push)* |
+| **Docker Image** | https://hub.docker.com/r/nikhilsainiiitj/mlops-groupproject-inference |
 
 ---
 
@@ -86,14 +86,20 @@ cd MLOps_GroupProject
 pip install -r requirements.txt
 ```
 
-### Docker Build & Run
+### Docker Build & Run (Local)
 
 ```bash
+# 1. Build
 docker build --build-arg HF_MODEL_NAME=Nikhil-iitj/emotion-electra \
   -t mlops-groupproject-inference:latest .
 
+# 2. Run inference (pass your HF_TOKEN at runtime)
 docker run --rm -e HF_TOKEN=$HF_TOKEN -e INPUT_TEXT="I am so happy today!" \
   mlops-groupproject-inference:latest
+
+# 3. Push to Docker Hub (after docker login)
+docker tag mlops-groupproject-inference:latest nikhilsainiiitj/mlops-groupproject-inference:latest
+docker push nikhilsainiiitj/mlops-groupproject-inference:latest
 ```
 
 ### GitHub Actions
