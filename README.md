@@ -26,7 +26,7 @@ End-to-end MLOps pipeline for text emotion classification using the `dair-ai/emo
 | **Kaggle Notebook v2 (ELECTRA)** | https://www.kaggle.com/code/nikhilg25ait2067/ |
 | **Hugging Face Model v1** | https://huggingface.co/Nikhil-iitj/emotion-minilm |
 | **Hugging Face Model v2** | https://huggingface.co/Nikhil-iitj/emotion-electra |
-| **W&B Dashboard** | https://wandb.ai/g25ait2067-prom-iit-rajasthan/mlops-groupproject |
+| **W&B Dashboard** | https://wandb.ai/g25ait2067-prom-iit-rajasthan/mlops-groupproject-v2 |
 | **Docker Image** | *(add after push)* |
 
 ---
@@ -46,8 +46,8 @@ End-to-end MLOps pipeline for text emotion classification using the `dair-ai/emo
 
 | Version | Model | Epochs | Batch | LR | Accuracy | F1 | Loss | Size | Time |
 |---------|-------|--------|-------|-----|----------|-----|------|------|------|
-| **v1** | MiniLM-L12 | 3 | 16 | 3e-5 | 0.917 | 0.9169 | 0.542 | 133.5 MB | ~3m 44s |
-| **v2** | ELECTRA-small | 4 | 16 | 5e-5 | **0.920** | **0.9209** | **0.440** | **54.2 MB** | ~3m |
+| **v1** | MiniLM-L12 | 3 | 16 | 3e-5 | 0.907 | 0.9071 | 0.542 | 133.5 MB | ~3m 44s |
+| **v2** | ELECTRA-small | 4 | 16 | 5e-5 | **0.9265** | **0.9269** | **0.395** | **54.2 MB** | ~2m 56s |
 
 **Winner: v2 (ELECTRA-small)** — smaller, faster, and more accurate.
 

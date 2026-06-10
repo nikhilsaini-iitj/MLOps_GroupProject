@@ -10,7 +10,7 @@ import torch
 from transformers import (AutoModelForSequenceClassification, AutoTokenizer)
 
 MODEL_NAME = os.environ.get(
-    "HF_MODEL_NAME", "your-username/emotion-minilm")  # default for Docker ARG
+    "HF_MODEL_NAME", "Nikhil-iitj/emotion-electra")  # default = winning v2 model
 INPUT_TEXT = os.environ.get("INPUT_TEXT", "I am so happy today!")
 
 
