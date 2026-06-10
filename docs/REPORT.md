@@ -24,8 +24,8 @@ We built a complete MLOps pipeline for **6-class text emotion classification** u
 | Resource | URL |
 |----------|-----|
 | GitHub Repository | https://github.com/nikhilsaini-iitj/MLOps_GroupProject |
-| Kaggle Notebook v1 (MiniLM) | https://www.kaggle.com/code/nikhilg25ait2067/ |
-| Kaggle Notebook v2 (ELECTRA) | https://www.kaggle.com/code/nikhilg25ait2067/ |
+| Kaggle Notebook v1 (MiniLM) | https://www.kaggle.com/code/nikhilg25ait2067/kaggle-minilm |
+| Kaggle Notebook v2 (ELECTRA) | https://www.kaggle.com/code/nikhilg25ait2067/kaggle-electra |
 | Hugging Face Model v1 | https://huggingface.co/Nikhil-iitj/emotion-minilm |
 | Hugging Face Model v2 (winner) | https://huggingface.co/Nikhil-iitj/emotion-electra |
 | W&B Dashboard | https://wandb.ai/g25ait2067-prom-iit-rajasthan/mlops-groupproject-v2 |
