@@ -315,11 +315,8 @@ MLOps_GroupProject/
 ├── id2label.json          # Label mapping (committed)
 ├── .gitignore             # Excludes data/, results/, .env
 ├── README.md              # Setup + all live links
-├── .gitignore             # Excludes data/, results/, .env
-└── docs/                  # Internal planning docs (not graded)
-    ├── TEAM_DECISION.md   # Model-selection voting doc
-    ├── PLAN_v2.md         # Execution plan with role assignments
-    └── REPORT.md          # This file
+└── docs/
+    └── REPORT.md          # Full markdown report (source for PDF)
 ```
 
 ---
