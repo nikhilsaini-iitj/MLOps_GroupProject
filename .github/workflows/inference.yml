@@ -9,7 +9,7 @@ on:
       hf_model_name:
         description: 'Hugging Face model name'
         required: true
-        default: 'your-username/your-model-repo'
+        default: 'Nikhil-iitj/emotion-electra'
 
 jobs:
   infer:
